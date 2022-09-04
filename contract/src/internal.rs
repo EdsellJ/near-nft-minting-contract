@@ -1,4 +1,30 @@
+use std::{mem::size_of, collections::HashMap};
+
 use crate::*;
+
+// Refund the storage taken up by passed in approved account IDs and send the funds to the passed in account ID
+pub(crate) fn refund_approved_account_ids_iter<'a, I>(
+    account_id: AccountId,
+    approved_account_ids: I,
+) -> Promise
+where
+    I: Iterator<Item= &'a AccountId>,
+{
+    // get the storage total by going through and summing all the bytes for each approved account IDS
+    let storage_released: u64 = approved_account_ids.map(bytes_for_approved_account_id).sum();
+
+    // transfer
+    Promise::new(account_id).transfer(Balance::from(storage_released) * env::storage_byte_cost())
+}
+
+// Refund a map of approved account IDs and send the funds to the passed in account id
+pub(crate) fn refund_approved_account_ids(
+    account_id: AccountId,
+    approved_account_ids: &HashMap<AccountId, u64>
+) -> Promise {
+    // Call the refund_approved_account_ids_iter with the approved account IDs as keys
+    refund_approved_account_ids_iter(account_id, approved_account_ids.keys())
+}
 
 // Used to generate a unique prefix in our storage collections (avoid data collisions)
 pub(crate) fn hash_account_id(account_id: &AccountId) -> CryptoHash {
@@ -10,12 +36,25 @@ pub(crate) fn hash_account_id(account_id: &AccountId) -> CryptoHash {
     hash
 }
 
+// Calculate how many bytes the account ID is taking up
+pub(crate) fn bytes_for_approved_account_id(account_id: &AccountId) -> u64 {
+    // The extra 4 bytes are coming from Borsh Serialization to store the length of the string
+    account_id.as_str().len() as u64 + 4 + size_of::<u64>() as u64
+}
+
 //used to make sure the user attached exactly 1 yoctoNEAR
 pub(crate) fn assert_one_yocto() {
     assert_eq!(
         env::attached_deposit(),
         1,
         "Requires attached deposit of exactly 1 yoctoNEAR",
+    )
+}
+
+pub(crate) fn assert_at_least_one_yocto() {
+    assert!(
+        env::attached_deposit() >=1,
+        "Requires attached deposit of at least 1 yoctoNEAR",
     )
 }
 
@@ -96,14 +135,33 @@ impl Contract {
         sender_id: &AccountId,
         receiver_id: &AccountId,
         token_id: &TokenId,
+        approval_id: Option<u64>,
         memo: Option<String>
     ) -> Token {
         // Get the token object by passing in the token_id
         let token = self.tokens_by_id.get(token_id).expect("Not token");
 
-        // If the sender doesnt equal the owner, we panic
+        // If the sender doesnt equal the owner, chceck if the send is in the approval list
         if sender_id != &token.owner_id {
-            env::panic_str("Unauthorized");
+            // if the token's approved account IDs doesn't contain the sender, panic
+            if !token.approved_account_ids.contains_key(sender_id) {
+                env::panic_str("Unauthorized");
+            }
+            // If they included an approval_id, check if the sender's actual approval_id is
+            // the same as the one included
+            if let Some(enforced_approval_id) = approval_id {
+                // get the actual approval ID
+                let actual_approval_id = token
+                    .approved_account_ids
+                    .get(sender_id)
+                    .expect("Sender is not approved account");
+                // make sure that the actual approval id is the same as the one provided
+                assert_eq!(
+                    actual_approval_id, &enforced_approval_id,
+                    "The actual approval_id {} is ddiferent from the given approval_id {}",
+                    actual_approval_id, enforced_approval_id
+                );
+            }
         }
 
         // make sure that the sender isn't sending the token to themselves
@@ -120,7 +178,10 @@ impl Contract {
 
         // create a new token struct
         let new_token = Token {
-            owner_id: receiver_id.clone()
+            owner_id: receiver_id.clone(),
+            // reset the approval account IDS
+            approved_account_ids: Default::default(),
+            next_approval_id: token.next_approval_id,
         };
         // insert new token into the tokens_by_id, replacing the old entry
         self.tokens_by_id.insert(token_id, &new_token);

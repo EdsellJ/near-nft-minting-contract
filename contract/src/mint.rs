@@ -16,7 +16,11 @@ impl Contract {
         log!("Welcome {}! Thank you for minting with educoin.", receiver_id);
         // specify the token struct that contains the owner ID
         let token = Token {
-            owner_id: receiver_id
+            owner_id: receiver_id,
+            // set the approved account IDs to the default value (an empty map)
+            approved_account_ids: Default::default(),
+            // next approval ID is set to 0
+            next_approval_id: 0,
         };
 
         // Insert the token ID and token struct and make sure that the token doesn't exist

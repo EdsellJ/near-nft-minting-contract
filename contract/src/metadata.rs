@@ -41,7 +41,13 @@ pub struct TokenMetadata {
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Token {
     // Owner of the token
-    pub owner_id: AccountId
+    pub owner_id: AccountId,
+
+    // List of approved account IDS that have access to transfer the token.
+    pub approved_account_ids: HashMap<AccountId, u64>,
+
+    // the next approval ID to give out
+    pub next_approval_id: u64,
 }
 
 // The Json token is what will be returned from view calls
@@ -51,7 +57,9 @@ pub struct JsonToken {
     // Token ID
     pub token_id: TokenId,
     pub owner_id: AccountId,
-    pub metadata: TokenMetadata
+    pub metadata: TokenMetadata,
+    // List of approved account IDs that have access to transfer the token
+    pub approved_account_ids: HashMap<AccountId, u64>,
 }
 
 pub trait NonFungibleTokenMetadata {
