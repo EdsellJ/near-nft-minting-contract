@@ -10,6 +10,15 @@ pub(crate) fn hash_account_id(account_id: &AccountId) -> CryptoHash {
     hash
 }
 
+//used to make sure the user attached exactly 1 yoctoNEAR
+pub(crate) fn assert_one_yocto() {
+    assert_eq!(
+        env::attached_deposit(),
+        1,
+        "Requires attached deposit of exactly 1 yoctoNEAR",
+    )
+}
+
 // refund the initial deposit based on the amount of stroage that was used up
 pub(crate) fn refund_deposit(storage_used: u64) {
     // get how much it would cost to store the information

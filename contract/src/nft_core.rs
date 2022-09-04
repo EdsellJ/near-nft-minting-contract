@@ -1,5 +1,5 @@
 use crate::*;
-use near_sdk::{ext_contract, assert_one_yocto, Gas, PromiseResult, log};
+use near_sdk::{ext_contract, Gas, PromiseResult, log};
 
 const GAS_FOR_RESOLVE_TRANSFER: Gas = Gas(10_000_000_000_000);
 const GAS_FOR_NFT_ON_TRANSFER: Gas = Gas(25_000_000_000_000);
@@ -81,7 +81,7 @@ impl NonFungibleTokenCore for Contract {
         );
     }
 
-    // Transfers an NFT to a receiver and calls a function ont the receiver ID's contract
+    // Transfers an NFT to a receiver and calls a function on the receiver ID's contract
     // Returns 'true' if the token was transferred from the sender's account
     #[payable]
     fn nft_transfer_call(
