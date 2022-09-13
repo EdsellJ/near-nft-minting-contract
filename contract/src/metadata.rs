@@ -48,6 +48,8 @@ pub struct Token {
 
     // the next approval ID to give out
     pub next_approval_id: u64,
+
+    pub royalty: HashMap<AccountId, u32>
 }
 
 // The Json token is what will be returned from view calls
@@ -60,6 +62,8 @@ pub struct JsonToken {
     pub metadata: TokenMetadata,
     // List of approved account IDs that have access to transfer the token
     pub approved_account_ids: HashMap<AccountId, u64>,
+
+    pub royalty: HashMap<AccountId, u32>
 }
 
 pub trait NonFungibleTokenMetadata {
