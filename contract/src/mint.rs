@@ -53,12 +53,6 @@ impl Contract {
         // call the internal method for adding the token to the owner
         self.internal_add_token_to_owner(&token.owner_id, &token_id);
 
-        // Calculate the required storage which was used minus initial
-        let required_storage_in_bytes = env::storage_usage() - initial_storage_usage;
-
-        // Refund an excess storage if the user attached too much. Panic if they didn't attach enough to cover thre required
-        refund_deposit(required_storage_in_bytes);
-
         // Construct the mint log as per the events standard.
         let nft_mint_log: EventLog = EventLog {
             // Standard name ("nep171").
@@ -78,5 +72,12 @@ impl Contract {
 
         // Log the serialized json.
         env::log_str(&nft_mint_log.to_string());
+
+      // Calculate the required storage which was used minus initial
+      let required_storage_in_bytes = env::storage_usage() - initial_storage_usage;
+
+      // Refund an excess storage if the user attached too much. Panic if they didn't attach enough to cover thre required
+      refund_deposit(required_storage_in_bytes);
+
     }
 }
