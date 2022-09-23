@@ -33,6 +33,7 @@ trait NonFungibleTokenApprovalsReceiver {
 
 #[near_bindgen]
 impl NonFungibleTokenCore for Contract {
+    // TODO: Write Unit Test
     // Approve an account ID to transfer a token on your behalf
     #[payable]
     fn nft_approve(&mut self, token_id: TokenId, account_id: AccountId, msg: Option<String>) {
@@ -86,7 +87,8 @@ impl NonFungibleTokenCore for Contract {
             }
     }
 
-    // check if the passwed in account hass access to approve the token ID
+    // TODO: Write Unit Test
+    // check if the passed in account hass access to approve the token ID
     fn nft_is_approved(
         &self,
         token_id: TokenId,
@@ -113,6 +115,7 @@ impl NonFungibleTokenCore for Contract {
         }
     }
 
+    // TODO: Write Unit Test
     // revoke a specific account from transferring the token on your behalf
     #[payable]
     fn nft_revoke(&mut self, token_id: TokenId, account_id: AccountId) {
@@ -139,6 +142,7 @@ impl NonFungibleTokenCore for Contract {
         }
     }
 
+    // TODO: Write Unit Test
     // Revoke all accounts from transferring the token on your behalf
     #[payable]
     fn nft_revoke_all(&mut self, token_id: TokenId) {

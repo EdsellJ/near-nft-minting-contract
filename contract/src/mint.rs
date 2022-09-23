@@ -1,7 +1,4 @@
 use std::collections::HashMap;
-
-use near_sdk::log;
-
 use crate::*;
 
 #[near_bindgen]
@@ -16,7 +13,6 @@ impl Contract {
     ) {
         // Measture the initial storage being used on the contract
         let initial_storage_usage = env::storage_usage();
-        log!("Welcome {}! Thank you for minting with educoin.", receiver_id);
 
         // create a royalty map to store in the token
         let mut royalty = HashMap::new();
@@ -73,11 +69,11 @@ impl Contract {
         // Log the serialized json.
         env::log_str(&nft_mint_log.to_string());
 
-      // Calculate the required storage which was used minus initial
-      let required_storage_in_bytes = env::storage_usage() - initial_storage_usage;
+        // Calculate the required storage which was used minus initial
+        let required_storage_in_bytes = env::storage_usage() - initial_storage_usage;
 
-      // Refund an excess storage if the user attached too much. Panic if they didn't attach enough to cover thre required
-      refund_deposit(required_storage_in_bytes);
+        // Refund an excess storage if the user attached too much. Panic if they didn't attach enough to cover thre required
+        refund_deposit(required_storage_in_bytes);
 
     }
 }
