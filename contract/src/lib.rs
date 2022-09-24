@@ -14,6 +14,7 @@ pub use crate::approval::*;
 pub use crate::royalty::*;
 pub use crate::events::*;
 
+mod tests;
 mod approval;
 mod enumeration;
 mod metadata;
