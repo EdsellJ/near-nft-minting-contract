@@ -4,25 +4,24 @@
 //     justify-content: center;
 //     align-items: center;
 // }
-.nft-cards {
-    justify-content: center;
-}
+// .nft-cards {
+//     justify-content: center;
+// }
 
 .home-page-wrapper {
-    position: fixed;
-    height: 100vh;
+    // height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     width: 100%;
-     .mat-card{
-        width:400px;
-        text-align:center;
-        padding: 32px;
-    }
-    .buttons {
-        .go-back-button {
-            margin-right: 10px;
-        }
+    // .mat-card{
+    //     width: fit-content;
+    //     text-align:center;
+    //     padding: 32px;
+    // }
+    .button-div {
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 }

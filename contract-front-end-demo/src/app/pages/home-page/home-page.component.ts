@@ -25,6 +25,10 @@ export class HomePageComponent implements OnInit {
   }
 
   goToMintPage() {
+    if (!this.isLoggedIn) {
+      window.alert("Not logged in!");
+      return;
+    }
     this.router.navigate(["/mint"])
   }
 
