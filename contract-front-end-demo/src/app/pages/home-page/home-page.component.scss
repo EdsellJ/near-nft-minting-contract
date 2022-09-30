@@ -1,0 +1,28 @@
+// .home-page-wrapper{
+//     height: 100vh;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+// }
+.nft-cards {
+    justify-content: center;
+}
+
+.home-page-wrapper {
+    position: fixed;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+     .mat-card{
+        width:400px;
+        text-align:center;
+        padding: 32px;
+    }
+    .buttons {
+        .go-back-button {
+            margin-right: 10px;
+        }
+    }
+}

@@ -1,0 +1,12 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title> {{ nft.metadata.title }}</mat-card-title>
+        <mat-card-subtitle> {{ "Owner Id: " + nft.owner_id }} </mat-card-subtitle>
+    </mat-card-header>
+    <img [src]="nft.metadata.media">
+    <mat-card-content>
+        <p>
+            {{ nft.metadata.description ?? "No description" }}
+        </p>
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,24 @@
+<div class="home-page-wrapper">
+    <mat-card class="main-card">
+        <mat-card-title>Actions:</mat-card-title>
+        <mat-card-content>
+            <div class="mint-nft-button">
+                <button mat-flat-button color="primary" type="button" (click)="goToMintPage()">Mint an NFT!</button>
+            </div>
+            <div>
+                <p>Your NFTs:</p>
+                <button mat-flat-button color="primary" type="button" (click)="getNfts()">Get Your Nfts</button>
+                <div class="nft-cards" *ngFor="let nft of nfts">
+                    <app-nft [nft]="nft"></app-nft>
+                </div>
+            </div>
+            
+            <div class="nft">
+                <button mat-flat-button color="primary" type="button" (click)="getAllNfts()">Get All NFTS</button>
+                <div class="nft-cards" *ngFor="let nft of allNfts">
+                    <app-nft [nft]="nft"></app-nft>
+                </div>
+            </div>        
+        </mat-card-content>
+    </mat-card>    
+</div>

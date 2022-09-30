@@ -1,0 +1,31 @@
+<div class="main-div">
+    <div class="content">
+        <mat-card>
+            <mat-card-title> Mint an NFT! </mat-card-title>
+            <mat-form-field color="accent">
+                <mat-label>Token Id</mat-label>
+                <input matInput id="token_id">
+            </mat-form-field> <br>
+            <mat-form-field color="accent">
+                <mat-label>Receiver Id</mat-label>
+                <input matInput id="reciever_id">
+            </mat-form-field> <br>
+            <mat-form-field color="accent">
+                <mat-label>Title</mat-label>
+                <input matInput id="title">
+            </mat-form-field> <br>
+            <mat-form-field color="accent">
+                <mat-label>Description</mat-label>
+                <input matInput id="description">
+            </mat-form-field> <br>
+            <mat-form-field color="accent">
+                <mat-label>Media</mat-label>
+                <input matInput id="media">
+            </mat-form-field>
+            <div class="buttons">
+                <button class="go-back-button" mat-flat-button color="accent" (click)="goBack()">Go Back</button>
+                <button mat-flat-button color="accent" (click)="onSubmit()">MINT!</button>
+            </div>
+        </mat-card>
+    </div>
+</div>
