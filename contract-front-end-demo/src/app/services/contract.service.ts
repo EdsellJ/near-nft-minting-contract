@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 // near api js
-import { providers } from 'near-api-js';
+import { Account, connect, ConnectConfig, Contract, keyStores, Near, providers, utils, WalletConnection } from 'near-api-js';
 // wallet selector UI
 import { setupModal } from '@near-wallet-selector/modal-ui';
 // wallet selector options
@@ -14,93 +14,83 @@ const NO_DEPOSIT = '0';
   providedIn: 'root'
 })
 export class ContractService {
-  walletSelector: WalletSelector;
-  wallet: Wallet;
-  network
-  createAccessKeyFor = "dev-1661628959946-58702458337809"
-  accountId;
-  
+  keyStore: keyStores.BrowserLocalStorageKeyStore;
+  connection: Near;
+  contract: Contract;
+  wallet: WalletConnection;
+
   constructor() {
-    // Login to a wallet passing a contractId will create a local
-    // key, so the user skips signing non-payable transactions.
-    // Omitting the accountId will result in the user being
-    // asked to sign all transactions.
+    this.keyStore = new keyStores.BrowserLocalStorageKeyStore();
   }
 
-  // To be called when the website loads
-  async startUp() {
-    this.walletSelector = await setupWalletSelector({
-      network: this.network,
-      modules: [setupMyNearWallet(),
-      setupLedger()],
-    });
-
-    const isSignedIn = this.walletSelector.isSignedIn();
-
-    if (isSignedIn) {
-      this.wallet = await this.walletSelector.wallet();
-      this.accountId = this.walletSelector.store.getState().accounts[0].accountId;
-    }
-
-    return isSignedIn;
+  async init(): Promise<void> {
+    const connectionConfig: ConnectConfig = {
+      networkId: "testnet",
+      keyStore: this.keyStore,
+      nodeUrl: "https://rpc.testnet.near.org",
+      walletUrl: "https://wallet.testnet.near.org",
+      helperUrl: "https://helper.testnet.near.org",
+      headers: {}
+    };
+    this.connection = await connect(connectionConfig);
+    this.wallet = new WalletConnection(this.connection, "nft-educoin");
+    
+    const account = new Account(this.connection.connection, this.wallet.getAccountId());
+    
+    this.contract = new Contract(
+      account,
+      "faults.testnet",
+      {
+        // name of contract you're connecting to
+        viewMethods: ["nft_tokens_for_owner", "nft_tokens"], // view methods do not change state but usually return a value
+        changeMethods: ["nft_mint"], // change methods modify state
+        sender: this.wallet.account()
+      } as any
+    )
   }
 
-  // Sign-in method
-  signIn() {
-    const description = 'Please select a wallet to sign in.';
-    const modal = setupModal(this.walletSelector, { contractId: this.createAccessKeyFor, description });
-    modal.show();
+  isLoggedIn(): boolean {
+    return this.wallet.isSignedIn();
   }
 
-  // Sign-out method
-  signOut() {
+  logout(): void {
     this.wallet.signOut();
-    this.wallet = this.accountId = this.createAccessKeyFor = null;
-    window.location.replace(window.location.origin + window.location.pathname);
   }
 
-  // Make a read-only call to retrieve information from the network
-  async viewMethod({ contractId, method, args = {} }) {
-    const { network } = this.walletSelector.options;
-    const provider = new providers.JsonRpcProvider({ url: network.nodeUrl });
+  async signIn(): Promise<void> {
+    await this.wallet.requestSignIn({
+      "contractId": "faults.testnet",
+    })
+  }
 
-    let res = await provider.query({
-      request_type: 'call_function',
-      account_id: contractId,
-      method_name: method,
-      args_base64: Buffer.from(JSON.stringify(args)).toString('base64'),
-      finality: 'optimistic',
+  async mint_nft(token_id: string, receiver_id: string, title: string, description: string, media_link: string): Promise<providers.FinalExecutionOutcome> {
+    let res = await this.wallet.account().functionCall({
+      "args": {
+        token_id: token_id,
+        receiver_id: receiver_id,
+        metadata: {
+          title: title,
+          description: description,
+          media: media_link
+        }
+      },
+      "contractId": "faults.testnet",
+      "methodName": "nft_mint",
+      "walletCallbackUrl": "http://localhost:4200/",
+      "attachedDeposit": utils.format.parseNearAmount("0.1")
     });
-    return JSON.parse(Buffer.from((res as any).result).toString());
+    return res;
   }
 
-  // Call a method that changes the contract's state
-  async callMethod({ contractId, method, args = {}, gas = THIRTY_TGAS, deposit = NO_DEPOSIT }) {
-    // Sign a transaction with the "FunctionCall" action
-    return await this.wallet.signAndSendTransaction({
-      signerId: this.accountId,
-      receiverId: contractId,
-      actions: [
-        {
-          type: 'FunctionCall',
-          params: {
-            methodName: method,
-            args,
-            gas,
-            deposit,
-          },
-        },
-      ],
-    });
+  async nft_tokens_for_owner(): Promise<any[]> {
+    return await (this.contract as any).nft_tokens_for_owner({account_id: this.wallet.getAccountId()})
   }
 
-  // Get transaction result from the network
-  async getTransactionResult(txhash) {
-    const { network } = this.walletSelector.options;
-    const provider = new providers.JsonRpcProvider({ url: network.nodeUrl });
+  async nft_tokens(): Promise<any[]> {
+    return await (this.contract as any).nft_tokens();
+  }
 
-    // Retrieve transaction result from the network
-    const transaction = await provider.txStatus(txhash, 'unnused');
-    return providers.getTransactionLastResult(transaction);
+  getAccountId(): string {
+    return this.wallet.getAccountId()
   }
 }

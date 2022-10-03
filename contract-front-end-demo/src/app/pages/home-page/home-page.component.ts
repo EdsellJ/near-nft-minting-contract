@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { contract, nearConnection, walletConnection } from '../../../app/app.component';
 import { Account, Contract, providers } from 'near-api-js';
 import { Router } from '@angular/router';
+import { ContractService } from '../../../app/services/contract.service';
 
 @Component({
   selector: 'app-home-page',
@@ -15,12 +15,12 @@ export class HomePageComponent implements OnInit {
   allNfts = [];
   accountId = "";
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private contract: ContractService) { }
 
   ngOnInit(): void {
-    this.isLoggedIn = walletConnection.isSignedIn()  
+    this.isLoggedIn = this.contract.isLoggedIn();  
     if (this.isLoggedIn) {
-      this.accountId = walletConnection.getAccountId();
+      this.accountId = this.contract.getAccountId();
     }
   }
 
@@ -32,25 +32,12 @@ export class HomePageComponent implements OnInit {
     this.router.navigate(["/mint"])
   }
 
-  async login() {
-    console.log("In login");
-    await walletConnection.requestSignIn({
-      "contractId": "faults.testnet", // contract requesting access
-    });  
-  }
-
-  logout() {
-    console.log("In logout");
-    walletConnection.signOut();
-    location.reload();
-  }
-
   async getNfts() {
-    if (!walletConnection.isSignedIn()) {
+    if (!this.contract.isLoggedIn()) {
       window.alert("Not logged in!")
       return;
     }
-    const res = await (contract as any).nft_tokens_for_owner({account_id: walletConnection.getAccountId()})
+    const res = await this.contract.nft_tokens_for_owner();
     if (res.length == 0) {
       window.alert("No NFTS found for this account!")
       return;
@@ -60,7 +47,7 @@ export class HomePageComponent implements OnInit {
   }
 
   async getAllNfts() {
-    const res = await (contract as any).nft_tokens();
+    const res = await this.contract.nft_tokens();
     if (res.length == 0) {
       window.alert("No NFTS!");
       return;
