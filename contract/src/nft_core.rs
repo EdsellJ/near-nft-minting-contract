@@ -74,7 +74,7 @@ impl NonFungibleTokenCore for Contract {
     ) {
         // assert that the user attached exacly 1 yoctoNEAR, this is for security and so that the user will be
         // redirected to the NEAR wallet
-        assert_one_yocto();
+        assert_at_least_one_yocto();
         // Get the sender sending the token
         let sender_id = env::predecessor_account_id();
 

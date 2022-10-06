@@ -20,7 +20,8 @@ fn should_mint_nft() {
             updated_at: None, 
             extra: None, 
             reference: None, 
-            reference_hash: None 
+            reference_hash: None,
+            token_type: None
         },
         context.signer_account_id.clone(), 
         None
@@ -30,8 +31,11 @@ fn should_mint_nft() {
     assert!(nft_count.is_some());
 
     let nft = nft_count.unwrap();
-    assert_eq!(nft.token_id, String::from("token_id"));
+    
+    assert_eq!(nft.token_id, String::from("token_d"));
     assert_eq!(nft.owner_id, context.signer_account_id);
+    assert!(nft.metadata.token_type.is_some());
+    assert!(nft.metadata.issued_at.is_some());
 
 }
 
@@ -43,10 +47,10 @@ fn should_panic_token_already_exists() {
 
     let mut nft_contract = Contract::new_default_meta(context.current_account_id.clone());
 
-    mint_nft_help(&mut nft_contract, &context, "token_id", None);
+    mint_nft_help(&mut nft_contract, &context, "token_id", None, None);
 
     // mint nft again, same id
-    mint_nft_help(&mut nft_contract, &context, "token_id", None);
+    mint_nft_help(&mut nft_contract, &context, "token_id", None, None);
 }
 
 #[test]
@@ -57,7 +61,7 @@ fn should_panic_no_attached_deposit() {
     let mut nft_contract = Contract::new_default_meta(context.current_account_id.clone());
 
     // This will fail
-    mint_nft_help(&mut nft_contract, &context, "token_id", None);
+    mint_nft_help(&mut nft_contract, &context, "token_id", None, None);
 }
 
 #[test]
@@ -79,7 +83,7 @@ fn should_panic_attached_seven_royalties_accounts() {
         ("account8".parse().unwrap(), 2),
     ].iter().cloned().collect::<HashMap<_,_>>();
             
-    mint_nft_help(&mut nft_contract, &context, "token_id", Some(royalties));
+    mint_nft_help(&mut nft_contract, &context, "token_id", Some(royalties), None);
 }
 
 #[test]
@@ -94,7 +98,7 @@ fn should_add_all_royalty_accounts() {
         ("account2".parse().unwrap(), 2),
     ].iter().cloned().collect::<HashMap<_,_>>();
     
-    mint_nft_help(&mut nft_contract, &context, "token_id", Some(royalties));
+    mint_nft_help(&mut nft_contract, &context, "token_id", Some(royalties), None);
 
     assert_eq!(nft_contract.nft_supply_for_owner(context.signer_account_id.clone()), U128(1));
 

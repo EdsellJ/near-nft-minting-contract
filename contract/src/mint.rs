@@ -43,6 +43,16 @@ impl Contract {
             "Token already exists"
         );
 
+        let mut metadata = metadata.clone();
+        // Check the token type, if None, set equal to TokenType::Content
+        metadata.token_type = match metadata.token_type {
+            None => Some(TokenType::Content),
+            Some(token_type) => Some(token_type)
+        };
+
+        // Set the issued at time
+        metadata.issued_at = Some(near_sdk::env::block_timestamp_ms());
+        
         // insert the token ID and metadata
         self.token_metadata_by_id.insert(&token_id, &metadata);
 
@@ -72,7 +82,7 @@ impl Contract {
         // Calculate the required storage which was used minus initial
         let required_storage_in_bytes = env::storage_usage() - initial_storage_usage;
 
-        // Refund an excess storage if the user attached too much. Panic if they didn't attach enough to cover thre required
+        // Refund an excess storage if the user attached too much. Panic if they didn't attach enough to cover the required
         refund_deposit(required_storage_in_bytes);
 
     }
