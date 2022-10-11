@@ -1,24 +1,128 @@
-Hello NEAR!
+# Welcome To Educoin's Near Minting Smart Contract!
 =================================
 
-A [smart contract] written in [Rust] for an app initialized with [create-near-app]
+# Available Functions
+* nft_mint
+* nft_metadata
+* nft_transfer
+* nft_token
+* nft_approve
+* nft_is_approved
+* nft_revoke
+* nft_revoke_all
+* nft_total_supply
+* nft_tokens
+* nft_supply_for_owner
+* nft_tokens_for_owner
 
+# Functions
 
-Quick Start
-===========
+## nft_mint
+### Description
+This function is the power horse of this contract. This function will mint a token and store it on the blockchain.
+### Arguments
+```shell
+{
+  token_id: String,
+  metadata: {
+    title: Optional<String>,
+    description: Optional<String>,
+    media: Optional<String>,
+    media_hash: Optional<String>,
+    copies: Optional<Number>,
+    issued_at: Optional<Number>,
+    expires_at: Optional<Number>,
+    starts_at: Optional<Number>,
+    updated_at: Optional<Number>,
+    extra: Optional<String>,
+    reference: Optional<String>,
+    reference_hash: Optional<Base64VecU8>,
+    token_type: Optional<"Content" | "Badge">
+  },
+  receiver_id: String,
+  perpetual_royalties: Optional<{AccountId: String, Amount: Number}>
+}
 
-Before you compile this code, you will need to install Rust with [correct target]
+```
+### Usage
+```console
 
-Exploring The Code
-==================
+near call $NFT_CONTRACT nft_mint 
 
-1. The main smart contract code lives in `src/lib.rs`.
-2. There are two functions to the smart contract: `get_greeting` and `set_greeting`.
-3. Tests: You can run smart contract tests with the `cargo test`.
+```
+## nft_metadata
 
+### Description
 
-  [smart contract]: https://docs.near.org/develop/welcome
-  [Rust]: https://www.rust-lang.org/
-  [create-near-app]: https://github.com/near/create-near-app
-  [correct target]: https://docs.near.org/develop/prerequisites#rust-and-wasm
-  [cargo]: https://doc.rust-lang.org/book/ch01-03-hello-cargo.html
+### Arguments
+### Usage
+
+## nft_transfer
+
+### Description
+
+### Arguments
+### Usage
+
+## nft_token
+
+### Description
+
+### Arguments
+### Usage
+
+## nft_approve
+
+### Description
+
+### Arguments
+### Usage
+
+## nft_is_approved
+
+### Description
+
+### Arguments
+### Usage
+
+## nft_revoke
+
+### Description
+
+### Arguments
+### Usage
+
+## nft_revoke_all
+
+### Description
+
+### Arguments
+### Usage
+
+## nft_total_supply
+
+### Description
+
+### Arguments
+### Usage
+
+## nft_tokens
+
+### Description
+
+### Arguments
+### Usage
+
+## nft_supply_for_owner
+
+### Description
+
+### Arguments
+### Usage
+
+## nft_tokens_for_owner
+
+### Description
+
+### Arguments
+### Usage
