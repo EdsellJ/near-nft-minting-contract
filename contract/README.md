@@ -77,9 +77,11 @@ $ near call $NFT_CONTRACT nft_transfer '{ "receiver_id": "another.testnet", "tok
 ### Description
 Get token information for a given token id
 ### Arguments
+```
 {
   token_id: String
 }
+```
 ### Usage
 ```console
 $ near view $NFT_CONTRACT nft_token '{"token_id": "an_exsiting_id"}'
