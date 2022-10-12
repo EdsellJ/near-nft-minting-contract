@@ -55,7 +55,7 @@ Returns the Metadata for the contract
 None
 ### Usage
 ```console
-near call $NFT_CONTRACT nft_metadata
+$ near call $NFT_CONTRACT nft_metadata
 ```
 ## nft_transfer
 ### Description
@@ -71,7 +71,7 @@ Transfer an nft from your account to another
 ```
 ### Usage
 ```console
-near call $NFT_CONTRACT nft_transfer '{ "receiver_id": "another.testnet", "token_id": "tokenid" }' --accountId myAccount.testnet --deposit 0.1
+$ near call $NFT_CONTRACT nft_transfer '{ "receiver_id": "another.testnet", "token_id": "tokenid" }' --accountId myAccount.testnet --deposit 0.1
 ```
 ## nft_token
 ### Description
@@ -82,7 +82,7 @@ Get token information for a given token id
 }
 ### Usage
 ```console
-near view $NFT_CONTRACT nft_token '{"token_id": "an_exsiting_id"}'
+$ near view $NFT_CONTRACT nft_token '{"token_id": "an_exsiting_id"}'
 ```
 ## nft_approve
 ### Description
@@ -97,7 +97,7 @@ Let an account id transfer your tokens on your behalf
 ```
 ### Usage
 ```console
-near call $NFT_CONTRACT nft_approve '{"token_id": "an_exsiting_id", "account_id": "an_account.testnet"}' --accountId myAccount.testnet --deposit 0.1
+$ near call $NFT_CONTRACT nft_approve '{"token_id": "an_exsiting_id", "account_id": "an_account.testnet"}' --accountId myAccount.testnet --deposit 0.1
 ```
 ## nft_is_approved
 ### Description
@@ -112,7 +112,7 @@ Check to see if a passed in account has access to approve the token id
 ```
 ### Usage
 ```console
-near call $NFT_CONTRACT nft_is_approved '{"token_id": "an_exsiting_id", "approved_account_id": "hello.testnet"}' --accountId myAccount.testnet --deposit 0.1
+$ near call $NFT_CONTRACT nft_is_approved '{"token_id": "an_exsiting_id", "approved_account_id": "hello.testnet"}' --accountId myAccount.testnet --deposit 0.1
 ```
 ## nft_revoke
 ### Description
@@ -126,7 +126,7 @@ Remove a specific account from transferring the token on your behalf
 ```
 ### Usage
 ```console
-near call $NFT_CONTRACT nft_revoke '{ "token_id": "anToken", "account_id": "anaccount.testnet" }' --accountId myaccount.testnet --deposit 0.1
+$ near call $NFT_CONTRACT nft_revoke '{ "token_id": "anToken", "account_id": "anaccount.testnet" }' --accountId myaccount.testnet --deposit 0.1
 ```
 ## nft_revoke_all
 ### Description
@@ -139,7 +139,7 @@ Revoke all accounts from transferring the token on your behalf
 ```
 ### Usage
 ```console
-near call $NFT_CONTRACT nft_revoke_all '{ "token_id": "anToken" }' --accountId myaccount.testnet --deposit 0.1
+$ near call $NFT_CONTRACT nft_revoke_all '{ "token_id": "anToken" }' --accountId myaccount.testnet --deposit 0.1
 ```
 ## nft_total_supply
 ### Description
@@ -148,7 +148,7 @@ Get the number of NFTS on the contract
 None
 ### Usage
 ```console
-near view $NFT_CONTRACT nft_total_supply
+$ near view $NFT_CONTRACT nft_total_supply
 ```
 ## nft_tokens
 ### Description
@@ -162,7 +162,7 @@ Query for nft tokens ono the contract regardless of the owner
 ```
 ### Usage
 ```console
-near view $NFT_CONTRACT nft_tokens
+$ near view $NFT_CONTRACT nft_tokens
 ```
 ## nft_supply_for_owner
 ### Description
@@ -175,7 +175,7 @@ Get the total supply of NFTs for a given owner
 ```
 ### Usage
 ```console
-near view $NFT_CONTRACT nft_supply_for_owner
+$ near view $NFT_CONTRACT nft_supply_for_owner
 ```
 ## nft_tokens_for_owner
 ### Description
@@ -190,5 +190,5 @@ Query for all the tokens for an owner
 ```
 ### Usage
 ```console
-near view $NFT_CONTRACT nft_tokens_for_owner '{"account_id": "myaccount.testnet"}'
+$ near view $NFT_CONTRACT nft_tokens_for_owner '{"account_id": "myaccount.testnet"}'
 ```
