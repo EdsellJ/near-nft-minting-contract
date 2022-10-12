@@ -77,8 +77,8 @@ impl Contract {
             owner_id,
             NFTContractMetadata { 
                 spec: "nft-1.0.0".to_string(),
-                name: "Educoin_Near_Minting_Serivce".to_string(),
-                symbol: "GOT".to_string(),
+                name: "Educoin".to_string(),
+                symbol: "https://beta.educoinapp.com/assets/educoin_logo.png".to_string(),
                 icon: None,
                 base_uri: None,
                 reference: None,
