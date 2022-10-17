@@ -25,11 +25,11 @@ export class ContractService {
 
   async init(): Promise<void> {
     const connectionConfig: ConnectConfig = {
-      networkId: "testnet",
+      networkId: "mainnet",
       keyStore: this.keyStore,
-      nodeUrl: "https://rpc.testnet.near.org",
-      walletUrl: "https://wallet.testnet.near.org",
-      helperUrl: "https://helper.testnet.near.org",
+      nodeUrl: "https://rpc.mainnet.near.org",
+      walletUrl: "https://wallet.mainnet.near.org",
+      helperUrl: "https://helper.mainnet.near.org",
       headers: {}
     };
     this.connection = await connect(connectionConfig);
@@ -39,7 +39,7 @@ export class ContractService {
     
     this.contract = new Contract(
       account,
-      "faults.testnet",
+      "jakediba.near",
       {
         // name of contract you're connecting to
         viewMethods: ["nft_tokens_for_owner", "nft_tokens"], // view methods do not change state but usually return a value
@@ -59,7 +59,7 @@ export class ContractService {
 
   async signIn(): Promise<void> {
     await this.wallet.requestSignIn({
-      "contractId": "faults.testnet",
+      "contractId": "jakediba.near",
     })
   }
 
@@ -74,7 +74,7 @@ export class ContractService {
           media: media_link
         }
       },
-      "contractId": "faults.testnet",
+      "contractId": "jakediba.near",
       "methodName": "nft_mint",
       "walletCallbackUrl": "http://localhost:4200/",
       "attachedDeposit": utils.format.parseNearAmount("0.1")
