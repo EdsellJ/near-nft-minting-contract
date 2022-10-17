@@ -14,7 +14,7 @@ pub use crate::approval::*;
 pub use crate::royalty::*;
 pub use crate::events::*;
 
-mod tests;
+#[cfg(all(test, not(target_arch="wasm32")))] mod tests;
 mod approval;
 mod enumeration;
 mod metadata;
@@ -77,8 +77,8 @@ impl Contract {
             owner_id,
             NFTContractMetadata { 
                 spec: "nft-1.0.0".to_string(),
-                name: "Educoin_Near_Minting_Serivce".to_string(),
-                symbol: "GOT".to_string(),
+                name: "Educoin".to_string(),
+                symbol: "https://beta.educoinapp.com/assets/educoin_logo.png".to_string(),
                 icon: None,
                 base_uri: None,
                 reference: None,
@@ -111,106 +111,3 @@ impl Contract {
     }
 }
 
-/*
- * The rest of this file holds the inline tests for the code above
- * Learn more about Rust tests: https://doc.rust-lang.org/book/ch11-01-writing-tests.html
- */
-#[cfg(all(test, not(target_arch="wasm32")))]
-mod tests {
-    use super::*;
-    use near_sdk::test_utils::VMContextBuilder;
-    use near_sdk::{testing_env, VMContext};
-
-    fn get_context(is_view: bool) -> VMContext {
-        VMContextBuilder::new()
-            .current_account_id("nft_contract".parse().unwrap())
-            .signer_account_id("bob_near".parse().unwrap())
-            .account_balance(1000000)
-            .attached_deposit(near_sdk::ONE_NEAR)
-            .is_view(is_view)
-            .build()
-    }
-
-    fn mint_nft_help(nft_contract: &mut Contract, context: &VMContext, token_id: &str) {
-        nft_contract.nft_mint(
-            String::from(token_id), 
-            TokenMetadata { 
-                title: None, 
-                description: None, 
-                media: None, 
-                media_hash: None, 
-                copies: None, 
-                issued_at: None, 
-                expires_at: None, 
-                starts_at: None, 
-                updated_at: None, 
-                extra: None, 
-                reference: None, 
-                reference_hash: None 
-            },
-            context.signer_account_id.clone(), 
-            None
-        );
-    }
-
-    #[test]
-    #[should_panic]
-    fn should_panic_contract_not_initialized() {
-        let context = get_context(false);
-        testing_env!(context);
-
-        Contract::default(); // This does not init
-    }
-
-    #[test]
-    fn should_mint_nft() {
-        let context = get_context(false);
-        testing_env!(context.clone());
-
-        let mut nft_contract = Contract::new_default_meta(context.current_account_id);
-        nft_contract.nft_mint(
-            String::from("token_id"), 
-            TokenMetadata { 
-                title: None, 
-                description: None, 
-                media: None, 
-                media_hash: None, 
-                copies: None, 
-                issued_at: None, 
-                expires_at: None, 
-                starts_at: None, 
-                updated_at: None, 
-                extra: None, 
-                reference: None, 
-                reference_hash: None 
-            },
-            context.signer_account_id.clone(), 
-            None
-        );
-        let nft_count = nft_contract.nft_token(String::from("token_id"));
-        // check to see that an nft was created and returned
-        assert!(nft_count.is_some());
-
-        let nft = nft_count.unwrap();
-        assert_eq!(nft.token_id, String::from("token_id"));
-        assert_eq!(nft.owner_id, context.signer_account_id);
-    
-    }
-
-    #[test]
-    #[should_panic]
-    fn should_panic_token_already_exists() {
-        let context = get_context(false);
-        testing_env!(context.clone());
-
-        let mut nft_contract = Contract::new_default_meta(context.current_account_id.clone());
-
-        mint_nft_help(&mut nft_contract, &context, "token_id");
-
-        // mint nft again, same id
-        mint_nft_help(&mut nft_contract, &context, "token_id");
-    }
-
-
-
-}

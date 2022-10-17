@@ -21,7 +21,7 @@ pub struct NFTContractMetadata {
     pub reference_hash: Option<Base64VecU8>
 }
 
-#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize, Debug)]
+#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize, Debug, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct TokenMetadata {
     pub title: Option<String>,
@@ -36,6 +36,7 @@ pub struct TokenMetadata {
     pub extra: Option<String>,
     pub reference: Option<String>,
     pub reference_hash: Option<Base64VecU8>,
+    pub token_type: Option<TokenType>
 }
 
 #[derive(BorshDeserialize, BorshSerialize)]
@@ -76,4 +77,11 @@ impl NonFungibleTokenMetadata for Contract {
     fn nft_metadata(&self) -> NFTContractMetadata {
         self.metadata.get().unwrap()
     }
+}
+
+#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize, Debug, Clone)]
+#[serde(crate = "near_sdk::serde")]
+pub enum TokenType {
+    Content,
+    Badge
 }
