@@ -148,6 +148,8 @@ impl Contract {
         // Check to see if token is Badge type, if it is panic
         let token_metadata = self.token_metadata_by_id.get(token_id).expect("Token does not exist");
         
+        //***Not using token_type for now
+        /*
         match token_metadata.token_type.unwrap_or(TokenType::Content) {
             TokenType::Content => {},
             TokenType::Badge => {
@@ -155,6 +157,7 @@ impl Contract {
                 panic!("Your minted badge is not allowed to be transferred. Please contact Educoin for more information.")
             } 
         }
+        */
 
         // If the sender doesnt equal the owner, chceck if the send is in the approval list
         if sender_id != &token.owner_id {

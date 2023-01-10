@@ -36,7 +36,6 @@ pub struct TokenMetadata {
     pub extra: Option<String>,
     pub reference: Option<String>,
     pub reference_hash: Option<Base64VecU8>,
-    pub token_type: Option<TokenType>
 }
 
 #[derive(BorshDeserialize, BorshSerialize)]

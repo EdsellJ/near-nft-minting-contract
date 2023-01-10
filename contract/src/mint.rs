@@ -75,6 +75,7 @@ impl Contract {
         } else {
             env::panic(b"Require correct amount of Near attached");
         }
+        /*
         // Construct the mint log as per the events standard.
         let nft_mint_log: EventLog = EventLog {
             // Standard name ("nep171").
@@ -100,6 +101,6 @@ impl Contract {
 
         // Refund an excess storage if the user attached too much. Panic if they didn't attach enough to cover the required
         refund_deposit(required_storage_in_bytes);
-
+        */
     }
 }
